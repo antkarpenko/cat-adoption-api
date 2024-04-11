@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { ParseIntPipe } from '../common/pipes/parse-int.pipe';
@@ -8,13 +8,18 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
 import { Cat } from './cat.entity';
 import { UpdateCatDto } from './dto/update-cat.dto';
+import { UserService } from '../user/user.service';
+import { User } from '../user/user.entity';
 
 @UseGuards(RolesGuard)
 @UseGuards(AuthGuard)
 @ApiTags('cats')
 @Controller('cats')
 export class CatsController {
-  constructor(private readonly catsService: CatsService) {}
+  constructor(
+    private readonly catsService: CatsService,
+    private readonly userService: UserService,
+  ) {}
 
   @Post()
   @Roles(['admin'])
@@ -30,13 +35,23 @@ export class CatsController {
     return this.catsService.findAll();
   }
 
+  @Get('favorite')
+  @ApiBearerAuth()
+  async getFavorites(@Req() req){
+    return this.userService.getFavorites(req.user.id);
+  }
+
   @Get(':id')
   @ApiBearerAuth()
   findOne(
     @Param('id', new ParseIntPipe())
     id: number,
   ) {
-    return this.catsService.findOne(id);
+    const cat = this.catsService.findOne(id);
+    if (!cat) {
+      throw new NotFoundException('Cat not found');
+    }
+    return cat ;
   }
 
   @Put(':id')
@@ -53,4 +68,39 @@ export class CatsController {
   async remove(@Body() id: number) {
     return this.catsService.remove(id);
   }
+
+  private async getUserAndCat(id: number, userId: number): Promise<[User, Cat]> {
+    const [user, cat] = await Promise.all([
+      this.userService.findOne(userId),
+      this.catsService.findOne(id),
+    ]);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (!cat) {
+      throw new NotFoundException('Cat not found');
+    }
+
+    return [user, cat];
+  }
+
+
+  @ApiBearerAuth()
+  @Post(':id/favorite')
+  async addToFavorites(@Param('id') id: number, @Req() req) {
+    const [user, cat] = await this.getUserAndCat(id, req.user.id);
+    return this.userService.addToFavorites(user, cat)
+  }
+
+  @ApiBearerAuth()
+  @Delete(':id/favorite')
+  async removeFromFavorites(@Param('id') id: number, @Req() req) {
+    const [user, cat] = await this.getUserAndCat(id, req.user.id);
+    return this.userService.removeFromFavorites(user, cat);
+  }
+
+
+
 }

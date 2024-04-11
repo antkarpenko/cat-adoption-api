@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Cat } from '../cats/cat.entity';
 
 @Entity()
 export class User  {
@@ -21,5 +22,9 @@ export class User  {
 
   @Column('text', { array: true, default: '{}' })
   roles: string[];
+
+  @ManyToMany(() => Cat)
+  @JoinTable()
+  favorites: Cat[];
 
 }
