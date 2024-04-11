@@ -16,3 +16,8 @@ npm-debug.log
 
 # dist
 /dist
+
+
+.env
+
+/data

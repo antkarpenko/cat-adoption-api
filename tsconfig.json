@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "resolveJsonModule": true,
+    "module": "CommonJS",
+    "strict": true,
+    "esModuleInterop": true,
+    "strictPropertyInitialization": false,
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -11,7 +15,19 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@common/*": [
+        "./src/common/*"
+      ],
+      "@modules/*": [
+        "./src/modules/"
+      ]
+    },
   },
-  "include": ["src/**/*"]
 }
