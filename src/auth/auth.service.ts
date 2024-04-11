@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { UserService } from '../user/user.service';
@@ -12,16 +12,16 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, pass: string): Promise<any> {
+  async validateUser( email: string, pass: string ): Promise<any> {
     const user = await this.userService.findOneByEmail(email);
-    if (user && bcrypt.compareSync(pass, user.password)) {
+    if ( user && bcrypt.compareSync(pass, user.password) ) {
       const { password, ...result } = user;
       return result;
     }
     return null;
   }
 
-  async login(user: User) {
+  async login( user: User ) {
     const payload = {
       id: user.id,
       roles: user.roles,
@@ -31,18 +31,19 @@ export class AuthService {
     };
   }
 
-  async register(payload: Register) {
+  async register( payload: Register ) {
     const isEmailExist = await this.userService.findOneByEmail(payload.email);
-    if (isEmailExist) {
-      throw new HttpException('Email already exists', HttpStatus.CONFLICT);
+
+    if ( isEmailExist ) {
+      throw new Error('Email already exists');
     }
 
-    const roles = ['user'];
+    const roles = [ 'user' ];
 
-    const totalUsers = await this.userService.count()
-    if (!totalUsers){
+    const totalUsers = await this.userService.count();
+    if ( !totalUsers ) {
       // first user is admin
-      roles.push('admin')
+      roles.push('admin');
     }
 
     const salt = bcrypt.genSaltSync(10);
