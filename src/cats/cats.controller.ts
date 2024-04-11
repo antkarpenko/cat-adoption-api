@@ -62,10 +62,10 @@ export class CatsController {
   }
 
 
-  @Delete()
+  @Delete(':id')
   @Roles(['admin'])
   @ApiBearerAuth()
-  async remove(@Body() id: number) {
+  async remove(@Param('id') id: number) {
     return this.catsService.remove(id);
   }
 
