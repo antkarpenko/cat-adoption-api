@@ -1,9 +1,21 @@
 
-## Description
+## Cat Adoption API
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This is a Cat Adoption API built with [NestJS](https://nestjs.com/). 
+
+## API Documentation
+
+### Create .env file from .evn.example
+
+```bash
+$ cp .env.example .env
+```
+
+fill in the required fields in the .env file
 
 ## Installation
+
+Install dependencies
 
 ```bash
 $ npm install
@@ -22,19 +34,20 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
+## Swagger documentation
+ open [http://localhost:3000/api](http://localhost:3000/api) to view the swagger documentation ans test the endpoints
 
-```bash
-# unit tests
-$ npm run test
 
-# e2e tests
-$ npm run test:e2e
+## Register first user
+First registered user will have the role of admin
 
-# test coverage
-$ npm run test:cov
+To register a user, send a POST request to [http://localhost:3000/auth/register](http://localhost:3000/auth/register) with the following payload
+
+```json
+{
+    "email": "example@gmail.com",
+    "password": "password"
+}
 ```
 
-## Support
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
