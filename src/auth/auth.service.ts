@@ -22,7 +22,10 @@ export class AuthService {
   }
 
   async login(user: User) {
-    const payload = { id: user.id };
+    const payload = {
+      id: user.id,
+      roles: user.roles,
+    };
     return {
       access_token: this.jwtService.sign(payload),
     };
@@ -33,11 +36,21 @@ export class AuthService {
     if (isEmailExist) {
       throw new HttpException('Email already exists', HttpStatus.CONFLICT);
     }
+
+    const roles = ['user'];
+
+    const totalUsers = await this.userService.count()
+    if (!totalUsers){
+      // first user is admin
+      roles.push('admin')
+    }
+
     const salt = bcrypt.genSaltSync(10);
     const user = new User({
       email: payload.email,
       name: payload.name,
       password: bcrypt.hashSync(payload.password, salt),
+      roles,
     });
 
     return this.userService.create(user);

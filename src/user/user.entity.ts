@@ -19,4 +19,7 @@ export class User  {
   @Column({ unique: true, length: 50, type: 'varchar'})
   email: string;
 
+  @Column('text', { array: true, default: '{}' })
+  roles: string[];
+
 }
