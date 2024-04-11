@@ -6,6 +6,7 @@ export const EnvironmentSchema = z
       NODE_ENV: z.enum(['PROD', 'DEV', 'TYPEORM']),
       DB_URL: z.string().min(1),
       PORT: z.coerce.number().positive().default(3000),
+      JWT_SECRET: z.string().min(10),
     },
     { required_error: '.env file is required' },
   );

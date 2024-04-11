@@ -4,6 +4,7 @@ import { CoreModule } from './core/core.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Environment } from '@common/variables/environment';
 import { User } from './user/user.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { User } from './user/user.entity';
         User,
       ],
     }),
+    AuthModule,
     CoreModule,
     CatsModule
   ],

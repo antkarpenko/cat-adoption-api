@@ -20,6 +20,16 @@ export class UserService {
     });
   }
 
+  findOneByEmail(email: string): Promise<User | null> {
+    return this.userRepository.findOne({
+      where: { email },
+    });
+  }
+
+  async create(user: User): Promise<User> {
+    return this.userRepository.save(user);
+  }
+
   async remove(id: string): Promise<void> {
     await this.userRepository.delete(id);
   }
