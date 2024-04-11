@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Environment } from '@common/variables/environment';
 import { User } from './user/user.entity';
 import { AuthModule } from './auth/auth.module';
+import { Cat } from './cats/cat.entity';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AuthModule } from './auth/auth.module';
       synchronize: true,
       entities: [
         User,
+        Cat,
       ],
     }),
     AuthModule,

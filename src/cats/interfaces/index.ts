@@ -1,4 +1,4 @@
-export interface Cat {
+export interface CatPayload {
   name: string;
   age: number;
   breed: string;
